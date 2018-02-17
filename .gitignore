@@ -1,0 +1,15 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+data-raw
+data/blocks00
+data/blocks10
+data/2000/dissolve
+data/2000/erase
+data/2000/singlepart
+data/2016/dissolve
+data/2016/erase
+data/2016/singlepart
+*.csv
+R/combine_dasymetric_tracts.R
