@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>Test immigration map</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css' rel='stylesheet' />
+    <link href='https://mapbox.com/base/latest/base.css' rel='stylesheet' />
+
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+        #toggle {
+          position: absolute;
+        }
+        
+        .rounded-toggle {
+          background: yellow;
+        }
+        
+        .hand-click {
+          cursor: pointer;
+        }
+        
+        .hand-click:hover {
+          color: yellow;
+        }
+        
+        .legend {
+          /*background-color: #fff; */
+          border-radius: 3px;
+          box-shadow: 0 1px 2px rgba(0,0,0,0.10);
+          font: 'Open Sans';
+          padding: 10px;
+          /*opacity: 0.6;*/
+          position: relative;
+          right: 10px;
+          z-index: 3;
+          color: #fff;
+        }
+        .legend h4 {
+          margin: 0 0 10px;
+          color: #fff;
+        }
+        .legend div span {
+          border-radius: 50%;
+          display: inline-block;
+          height: 10px;
+          margin-right: 5px;
+          width: 10px;
+        }
+        
+        @media screen and (max-height: 650px) {
+          .mobile-hide {display: none;}
+        }
+        
+        @media screen and (min-height: 650px) {
+          .mobile-show {display: none;}
+        }
+    </style>
+</head>
+<body>
+  
+  
+<div id='map'></div>
+<div id='toggle' class='rounded-toggle inline'>
+  <input id='immigrants00' type='radio' name='rtoggle' value='immigrants00'>
+  <label for='immigrants00'>2000</label>
+  <input id='immigrants16' type='radio' name='rtoggle' value='immigrants16' checked='checked'>
+  <label for='immigrants16'>2012-2016</label>
+</div>
+<br/>
+<br/>
+<div id='legend10' class='legend mobile-hide'>
+    <div id='mexico' class='hand-click'><span style='background-color: #e41a1c' id='mexico-span'></span>Mexico</div>
+    <div id='latam' class='hand-click'><span style='background-color: #377eb8' id='latam-span'></span>Latin America/Caribbean</div>
+    <div id='eastasia' class='hand-click'><span style='background-color: #4daf4a' id='eastasia-span'></span>E/SE Asia</div>
+    <div id='ssafr' class='hand-click'><span style='background-color: #984ea3' id='ssafr-span'></span>Sub-Saharan Africa</div>
+    <div id='europe' class='hand-click'><span style='background-color: #ff7f00' id='europe-span'></span>Europe</div>
+    <div id='oceania' class='hand-click'><span style='background-color: #ffff33' id='oceania-span'></span>Oceania</div>
+    <div id='canada' class='hand-click'><span style='background-color: #a65628' id='canada-span'></span>Canada</div>
+    <div id='swanaf' class='hand-click'><span style='background-color: #f781bf' id='swanaf-span'></span>SW Asia/N.Africa</div>
+    <div id='sasia' class='hand-click'><span style='background-color: #00ffff' id='europe-span'></span>South Asia</div>
+  </div>
+<script>
+mapboxgl.accessToken = 'pk.eyJ1Ijoia3dhbGtlcnRjdSIsImEiOiJMRk9JSmRvIn0.l1y2jHZ6IARHM_rA1-X45A';
+var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/kwalkertcu/cjei0d23m389x2rmyxkts7map', // <-- this is where you put your style ID
+    zoom: 11,
+    center: [-122.447303, 37.753574], 
+    maxZoom: 12, 
+    minZoom: 4, 
+    hash: true
+});
+
+map.on('load', function () {
+  
+    var nav = new mapboxgl.NavigationControl();
+    map.addControl(nav, 'top-right');
+
+    map.addLayer({
+        'id': 'immigrants16',
+        'type': 'circle',
+        'source': {
+            type: 'vector',
+            url: 'mapbox://kwalkertcu.5dpt70kq'
+        },
+        'source-layer': 'immigration10csv',
+        'paint': {
+            // make circles larger as the user zooms from z12 to z22
+            'circle-radius': {
+                'base': 2,
+                'stops': [[4, 1], [12, 2]]
+            },
+            
+            'circle-color': {
+              property: 'level', 
+              type: 'categorical', 
+              stops: [
+                ['mexico', '#e41a1c'],
+                ['latam', '#377eb8'],
+                ['eastasia', '#4daf4a'],
+                ['ssafr', '#984ea3'],
+                ['europe', '#ff7f00'], 
+                ['oceania', '#ffff33'], 
+                ['canada', '#a65628'], 
+                ['swanaf', '#f781bf'], 
+                ['sasia', '#00ffff']
+              ]
+            }
+        }
+    }, 'waterway-label');
+    
+    map.addLayer({
+        'id': 'immigrants00',
+        'type': 'circle',
+        'source': {
+            type: 'vector',
+            url: 'mapbox://kwalkertcu.84d9b6d1'
+        },
+        'source-layer': 'immigration10csv',
+        'layout': {
+          'visibility': 'none'
+        },
+        'paint': {
+            // make circles larger as the user zooms from z12 to z22
+            'circle-radius': {
+                'base': 2,
+                'stops': [[4, 1], [12, 2]]
+            },
+            
+            'circle-color': {
+              property: 'level', 
+              type: 'categorical', 
+              stops: [
+                ['mexico', '#e41a1c'],
+                ['latam', '#377eb8'],
+                ['eastasia', '#4daf4a'],
+                ['ssafr', '#984ea3'],
+                ['europe', '#ff7f00'], 
+                ['oceania', '#ffff33'], 
+                ['canada', '#a65628'], 
+                ['swanaf', '#f781bf'], 
+                ['sasia', '#00ffff']
+              ]
+            }
+        }
+    }, 'waterway-label');
+    
+  
+    var toggle = document.getElementById('toggle'); 
+    
+    toggle.addEventListener('click', function(e) {
+      
+      layer = e.target.id; 
+      
+      if (layer === 'immigrants00') {
+        
+          map.setLayoutProperty('immigrants16', 'visibility', 'none');
+          map.setLayoutProperty('immigrants00', 'visibility', 'visible');
+        
+      } else {
+        
+          map.setLayoutProperty('immigrants00', 'visibility', 'none');
+          map.setLayoutProperty('immigrants16', 'visibility', 'visible');
+        
+      }
+      
+    });
+    
+    // Interactive legend logic - start here and experiment
+    
+    var filter = ["in", "level", "mexico", "latam", "eastasia", "ssafr", "europe", 
+                  "oceania", "canada", "swanaf", "sasia"]; 
+                  
+    var groups = [{group: "mexico", hex: "#e41a1c"}, 
+                  {group: "latam", hex: "#377eb8"}, 
+                  {group: "eastasia", hex: "#4daf4a"}, 
+                  {group: "ssafr", hex: "#984ea3"}, 
+                  {group: "europe", hex: "#ff7f00"}, 
+                  {group: "oceania", hex: "#ffff33"}, 
+                  {group: "canada", hex: "#a65628"}, 
+                  {group: "swanaf", hex: "#f781bf"}, 
+                  {group: "sasia", hex: "00ffff"}]; 
+
+    document.getElementById('legend10').addEventListener('click', function(e) {
+    
+      var group = e.target.id; 
+      var layer = 'immigrants16'; 
+      var group_span = group + '-span'; 
+      
+      // get the corresponding hex value for the level
+      var group_index = groups.map(function(x) {
+        return x.group; 
+      }).indexOf(group); 
+      
+      var hex = groups[group_index].hex; 
+      
+      var el = document.getElementById(group_span);
+      
+      // check if the level is in the target array; if not, then add it
+      if (filter.indexOf(group, 1) === -1) {
+        filter.push(group); 
+        map.setFilter(layer, filter); 
+        el.style.backgroundColor = hex; 
+        el.style.color = "#ffffff"; 
+      // otherwise, remove it
+      } else {
+        index = filter.indexOf(group); 
+        filter.splice(index, 1); 
+        map.setFilter(layer, filter); 
+        el.style.backgroundColor = '#c5c8cc'; 
+        el.style.color = '#c5c8cc'; 
+      }
+        
+    }); 
+    
+    // Preserve filter on zoom
+    
+    layerids.map(function(x) {
+      
+      map.on('zoom', function() {
+        
+        map.setFilter(x.id, filter); 
+        
+      }); 
+      
+    }); 
+
+
+});
+
+
+
+
+
+</script>
+
+</body>
+</html>
