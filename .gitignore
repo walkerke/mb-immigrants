@@ -2,6 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
+.idea
 data-raw
 data/blocks00
 data/blocks10
@@ -13,3 +14,6 @@ data/2016/erase
 data/2016/singlepart
 *.csv
 R/combine_dasymetric_tracts.R
+data
+lodes_raw
+archived

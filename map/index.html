@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset='utf-8' />
-    <title>Test immigration map</title>
+    <title>Mapping Immigrant America</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css' rel='stylesheet' />
@@ -16,7 +16,7 @@
         }
         
         .rounded-toggle {
-          background: yellow;
+          background: green;
         }
         
         .hand-click {
@@ -24,20 +24,21 @@
         }
         
         .hand-click:hover {
-          color: yellow;
+          color: green;
         }
         
         .legend {
-          /*background-color: #fff; */
+          background-color: #fff; 
           border-radius: 3px;
           box-shadow: 0 1px 2px rgba(0,0,0,0.10);
           font: 'Open Sans';
           padding: 10px;
-          /*opacity: 0.6;*/
-          position: relative;
-          right: 10px;
+          opacity: 0.6;
+          position: fixed;
+          top: 65%;
+          right: 0%;
           z-index: 3;
-          color: #fff;
+          color: #000;
         }
         .legend h4 {
           margin: 0 0 10px;
@@ -49,6 +50,10 @@
           height: 10px;
           margin-right: 5px;
           width: 10px;
+        }
+        
+        .legend:hover {
+          opacity: 1.0;
         }
         
         @media screen and (max-height: 650px) {
@@ -64,30 +69,22 @@
   
   
 <div id='map'></div>
-<div id='toggle' class='rounded-toggle inline'>
-  <input id='immigrants00' type='radio' name='rtoggle' value='immigrants00'>
-  <label for='immigrants00'>2000</label>
-  <input id='immigrants16' type='radio' name='rtoggle' value='immigrants16' checked='checked'>
-  <label for='immigrants16'>2012-2016</label>
-</div>
-<br/>
-<br/>
 <div id='legend10' class='legend mobile-hide'>
     <div id='mexico' class='hand-click'><span style='background-color: #e41a1c' id='mexico-span'></span>Mexico</div>
-    <div id='latam' class='hand-click'><span style='background-color: #377eb8' id='latam-span'></span>Latin America/Caribbean</div>
-    <div id='eastasia' class='hand-click'><span style='background-color: #4daf4a' id='eastasia-span'></span>E/SE Asia</div>
-    <div id='ssafr' class='hand-click'><span style='background-color: #984ea3' id='ssafr-span'></span>Sub-Saharan Africa</div>
+    <div id='cs_amer_caribbean' class='hand-click'><span style='background-color: #377eb8' id='cs_amer_caribbean-span'></span>Latin America/Caribbean</div>
+    <div id='east_se_asia' class='hand-click'><span style='background-color: #4daf4a' id='east_se_asia-span'></span>E/SE Asia</div>
+    <div id='sw_asia_n_africa' class='hand-click'><span style='background-color: #f781bf' id='sw_asia_n_africa-span'></span>SW Asia/N.Africa</div>
+    <div id='south_asia' class='hand-click'><span style='background-color: #00ffff' id='south_asia-span'></span>South Asia</div>
+    <div id='sub_saharan_africa' class='hand-click'><span style='background-color: #984ea3' id='sub_saharan_africa-span'></span>Sub-Saharan Africa</div>
     <div id='europe' class='hand-click'><span style='background-color: #ff7f00' id='europe-span'></span>Europe</div>
     <div id='oceania' class='hand-click'><span style='background-color: #ffff33' id='oceania-span'></span>Oceania</div>
     <div id='canada' class='hand-click'><span style='background-color: #a65628' id='canada-span'></span>Canada</div>
-    <div id='swanaf' class='hand-click'><span style='background-color: #f781bf' id='swanaf-span'></span>SW Asia/N.Africa</div>
-    <div id='sasia' class='hand-click'><span style='background-color: #00ffff' id='europe-span'></span>South Asia</div>
   </div>
 <script>
 mapboxgl.accessToken = 'pk.eyJ1Ijoia3dhbGtlcnRjdSIsImEiOiJMRk9JSmRvIn0.l1y2jHZ6IARHM_rA1-X45A';
 var map = new mapboxgl.Map({
     container: 'map',
-    style: 'mapbox://styles/kwalkertcu/cjei0d23m389x2rmyxkts7map', // <-- this is where you put your style ID
+    style: 'mapbox://styles/kwalkertcu/cj0jov12u007n2sqppuxe3fvr/draft', // <-- this is where you put your style ID
     zoom: 11,
     center: [-122.447303, 37.753574], 
     maxZoom: 12, 
@@ -97,17 +94,19 @@ var map = new mapboxgl.Map({
 
 map.on('load', function () {
   
+    map.addSource('state-dots', {
+      type: 'vector',
+      url: 'mapbox://kwalkertcu.state_dots2'
+    });
+  
     var nav = new mapboxgl.NavigationControl();
     map.addControl(nav, 'top-right');
 
     map.addLayer({
-        'id': 'immigrants16',
+        'id': 'immigrants18',
         'type': 'circle',
-        'source': {
-            type: 'vector',
-            url: 'mapbox://kwalkertcu.5dpt70kq'
-        },
-        'source-layer': 'immigration10csv',
+        'source': 'state-dots',
+        'source-layer': 'state_dots2',
         'paint': {
             // make circles larger as the user zooms from z12 to z22
             'circle-radius': {
@@ -116,99 +115,43 @@ map.on('load', function () {
             },
             
             'circle-color': {
-              property: 'level', 
+              property: 'group', 
               type: 'categorical', 
               stops: [
                 ['mexico', '#e41a1c'],
-                ['latam', '#377eb8'],
-                ['eastasia', '#4daf4a'],
-                ['ssafr', '#984ea3'],
+                ['cs_amer_caribbean', '#377eb8'],
+                ['east_se_asia', '#4daf4a'],
+                ['sub_saharan_africa', '#984ea3'],
                 ['europe', '#ff7f00'], 
                 ['oceania', '#ffff33'], 
                 ['canada', '#a65628'], 
-                ['swanaf', '#f781bf'], 
-                ['sasia', '#00ffff']
+                ['sw_asia_n_africa', '#f781bf'], 
+                ['south_asia', '#00ffff']
               ]
             }
         }
     }, 'waterway-label');
-    
-    map.addLayer({
-        'id': 'immigrants00',
-        'type': 'circle',
-        'source': {
-            type: 'vector',
-            url: 'mapbox://kwalkertcu.84d9b6d1'
-        },
-        'source-layer': 'immigration10csv',
-        'layout': {
-          'visibility': 'none'
-        },
-        'paint': {
-            // make circles larger as the user zooms from z12 to z22
-            'circle-radius': {
-                'base': 2,
-                'stops': [[4, 1], [12, 2]]
-            },
-            
-            'circle-color': {
-              property: 'level', 
-              type: 'categorical', 
-              stops: [
-                ['mexico', '#e41a1c'],
-                ['latam', '#377eb8'],
-                ['eastasia', '#4daf4a'],
-                ['ssafr', '#984ea3'],
-                ['europe', '#ff7f00'], 
-                ['oceania', '#ffff33'], 
-                ['canada', '#a65628'], 
-                ['swanaf', '#f781bf'], 
-                ['sasia', '#00ffff']
-              ]
-            }
-        }
-    }, 'waterway-label');
-    
-  
-    var toggle = document.getElementById('toggle'); 
-    
-    toggle.addEventListener('click', function(e) {
-      
-      layer = e.target.id; 
-      
-      if (layer === 'immigrants00') {
-        
-          map.setLayoutProperty('immigrants16', 'visibility', 'none');
-          map.setLayoutProperty('immigrants00', 'visibility', 'visible');
-        
-      } else {
-        
-          map.setLayoutProperty('immigrants00', 'visibility', 'none');
-          map.setLayoutProperty('immigrants16', 'visibility', 'visible');
-        
-      }
-      
-    });
     
     // Interactive legend logic - start here and experiment
     
-    var filter = ["in", "level", "mexico", "latam", "eastasia", "ssafr", "europe", 
-                  "oceania", "canada", "swanaf", "sasia"]; 
+    var filter = ["in", "group", "mexico", "cs_amer_caribbean", "east_se_asia", 
+                  "sub_saharan_africa", "europe", "south_asia",
+                  "oceania", "canada", "sw_asia_n_africa"]; 
                   
     var groups = [{group: "mexico", hex: "#e41a1c"}, 
-                  {group: "latam", hex: "#377eb8"}, 
-                  {group: "eastasia", hex: "#4daf4a"}, 
-                  {group: "ssafr", hex: "#984ea3"}, 
+                  {group: "cs_amer_caribbean", hex: "#377eb8"}, 
+                  {group: "east_se_asia", hex: "#4daf4a"}, 
+                  {group: "sub_saharan_africa", hex: "#984ea3"}, 
                   {group: "europe", hex: "#ff7f00"}, 
                   {group: "oceania", hex: "#ffff33"}, 
                   {group: "canada", hex: "#a65628"}, 
-                  {group: "swanaf", hex: "#f781bf"}, 
-                  {group: "sasia", hex: "00ffff"}]; 
+                  {group: "south_asia", hex: "#00ffff"}, 
+                  {group: "sw_asia_n_africa", hex: "#f781bf"}]; 
 
     document.getElementById('legend10').addEventListener('click', function(e) {
     
       var group = e.target.id; 
-      var layer = 'immigrants16'; 
+      var layer = 'immigrants18'; 
       var group_span = group + '-span'; 
       
       // get the corresponding hex value for the level
