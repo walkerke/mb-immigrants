@@ -12,20 +12,16 @@
     <style>
         body { margin:0; padding:0; }
         #map { position:absolute; top:0; bottom:0; width:100%; }
-        #toggle {
-          position: absolute;
-        }
-        
-        .rounded-toggle {
-          background: green;
-        }
-        
         .hand-click {
           cursor: pointer;
         }
         
         .hand-click:hover {
-          color: green;
+          color: red;
+        }
+        
+        .mapboxgl-ctrl-top-right {
+          margin: 35px 10px 0 0;
         }
         
         .legend {
@@ -33,10 +29,11 @@
           border-radius: 3px;
           box-shadow: 0 1px 2px rgba(0,0,0,0.10);
           font: 'Open Sans';
+          font-size: 110%;
           padding: 10px;
           opacity: 0.6;
           position: fixed;
-          top: 70%;
+          top: 67%;
           right: 0%;
           z-index: 3;
           color: #000;
@@ -92,7 +89,7 @@
   
 <div id='map'></div>
 <div id='legend10' class='legend mobile-hide'>
-    <div id='legend-title'>Placeholder</div>
+    <div id='legend-title'> </div>
     <div id='mexico' class='hand-click'><span style='background-color: #e41a1c' id='mexico-span'></span>Mexico</div>
     <div id='cs_amer_caribbean' class='hand-click'><span style='background-color: #377eb8' id='cs_amer_caribbean-span'></span>Latin America/Caribbean</div>
     <div id='east_se_asia' class='hand-click'><span style='background-color: #4daf4a' id='east_se_asia-span'></span>E/SE Asia</div>
@@ -103,6 +100,9 @@
     <div id='oceania' class='hand-click'><span style='background-color: #ffff33' id='oceania-span'></span>Oceania</div>
     <div id='canada' class='hand-click'><span style='background-color: #a65628' id='canada-span'></span>Canada</div>
   </div>
+  
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 <script>
 mapboxgl.accessToken = 'pk.eyJ1Ijoia3dhbGtlcnRjdSIsImEiOiJMRk9JSmRvIn0.l1y2jHZ6IARHM_rA1-X45A';
 var map = new mapboxgl.Map({
@@ -111,13 +111,13 @@ var map = new mapboxgl.Map({
     zoom: 11,
     center: [-87.630734, 41.864310], 
     maxZoom: 12, 
-    minZoom: 6, 
+    minZoom: 5, 
     hash: true
 });
 
 // Get current zoom level for dot translation
 
-map.on('zoom', function() {
+map.on('render', function() {
   var legend_title = document.getElementById('legend-title');
   legend_title.innerHTML = translate_dots();
 })
@@ -138,14 +138,16 @@ function translate_dots() {
     return "1 dot = approximately 800 people"  
   } else if (zm < 7 && zm >= 6) {
     return "1 dot = approximately 1600 people"  
-  } 
+  } else if (zm < 6 && zm >= 5) {
+    return "1 dot = approximately 3200 people"
+  }
 }
 
 map.on('load', function () {
   
     map.addSource('state-dots', {
       type: 'vector',
-      url: 'mapbox://kwalkertcu.state_dots2'
+      url: 'mapbox://kwalkertcu.state_dots3'
     });
   
     var nav = new mapboxgl.NavigationControl();
@@ -155,12 +157,12 @@ map.on('load', function () {
         'id': 'immigrants18',
         'type': 'circle',
         'source': 'state-dots',
-        'source-layer': 'state_dots2',
+        'source-layer': 'state_dots3',
         'paint': {
-            // make circles larger as the user zooms from z12 to z22
+            // make circles larger as the user zooms
             'circle-radius': {
                 'base': 2,
-                'stops': [[4, 1], [12, 2]]
+                'stops': [[5, 1.5], [12, 3]]
             },
             
             'circle-color': {
@@ -240,7 +242,7 @@ map.on('load', function () {
       }); 
       
     }); 
-
+    
 
 });
 

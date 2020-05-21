@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8 />
+<title>Mapping Immigrant America</title>
+<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+<script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
+<link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.15/themes/css/cartodb.css" />
+<script src='https://api.tiles.mapbox.com/mapbox.js/v2.2.2/mapbox.js'></script>
+<script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-locatecontrol/v0.43.0/L.Control.Locate.min.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-locatecontrol/v0.43.0/L.Control.Locate.mapbox.css' rel='stylesheet' />
+<!--[if lt IE 9]>
+<link href='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-locatecontrol/v0.43.0/L.Control.Locate.ie.css' rel='stylesheet' />
+<![endif]-->
+<link href='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-locatecontrol/v0.43.0/css/font-awesome.min.css' rel='stylesheet' />
+<link href='https://api.tiles.mapbox.com/mapbox.js/v2.2.2/mapbox.css' rel='stylesheet' />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/simplex/bootstrap.min.css">
+<style>
+    html {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
+    body {
+      height: 100%;
+      width: 100%;
+      padding-top: 40px;
+      }
+
+	#map { height:100%; width:100%; }
+
+  @media (max-width: 600px) {
+  	legend {display: none;}
+  	cartodb-legend {background-color: transparent;}
+  }
+
+</style>
+</head>
+<body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Mapping Immigrant America</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="http://personal.tcu.edu/kylewalker">Map author: Kyle Walker, Texas Christian University</a></li>
+            <li><a href="http://personal.tcu.edu/kylewalker/immigrant-america/about.html">Learn more about the map</a></li>
+            </li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+
+<div id = 'legend' class="cartodb-legend custom"> <ul id="sortable2"> <li> <div class="legend-title" style="font-size:14px; color:#1F1F1F; text-transform: none; ">1 dot = 20 immigrants<div> </div></div></li> <li style="text-transform: none;" draggable="false" class=""> <div class="point bullet" style=" background: #e41a1c; margin: 0 21px 0 12px;"></div> Mexico </li><li style="text-transform: none;" draggable="false" class=""> <div class="point bullet" style=" background: #377eb8; margin: 0 21px 0 12px;"></div> Latin America </li><li style="text-transform: none;" draggable="false" class=""> <div class="point bullet" style=" background: #4daf4a; margin: 0 21px 0 12px;"></div> East/SE Asia </li><li style="text-transform: none;" draggable="false" class=""> <div class="point bullet" style=" background: #06e8de; margin: 0 21px 0 12px;"></div> South Asia </li><li style="text-transform: none;" draggable="false" class=""> <div class="point bullet" style=" background: #f781bf; margin: 0 21px 0 12px;"></div> SW Asia/N. Africa </li><li style="text-transform: none;" draggable="false" class=""> <div class="point bullet" style=" background: #ff7f00; margin: 0 21px 0 12px;"></div> Europe </li><li style="text-transform: none;" draggable="false" class=""> <div class="point bullet" style=" background: #984ea3; margin: 0 21px 0 12px;"></div> Sub-Saharan Africa </li><li style="text-transform: none;" draggable="false" class=""> <div class="point bullet" style=" background: #a65628; margin: 0 21px 0 12px;"></div> Canada </li><li style="text-transform: none;" draggable="true" class="sortable-ghost"> <div class="point bullet" style=" background: #ffff33; margin: 0 21px 0 12px;"></div> Oceania </li></ul> </div>
+
+<!-- Map div -->
+<div id='map'></div>
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+<!--Map JS code -->
+<script>
+L.mapbox.accessToken = 'pk.eyJ1Ijoia3dhbGtlcnRjdSIsImEiOiJMRk9JSmRvIn0.l1y2jHZ6IARHM_rA1-X45A';
+var map = L.mapbox.map('map', 'kwalkertcu.nbo93ik5', {attributionControl: false})
+    .setView([41.89, -87.649], 12);
+	L.control.locate({icon: 'fa fa-location-arrow'}).addTo(map);
+	L.control.scale().addTo(map);
+  L.control.attribution()
+    .addAttribution('Demographic data from <a href="http://www.nhgis.org">NHGIS</a>, 2009-2013 American Community Survey | Tiles from <a href="http://mapbox.com/about/maps/">Mapbox</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> ')
+    .addTo(map);
+
+</script>
+
+<!--Google Analytics-->
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-67825309-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+</body>
+</html>

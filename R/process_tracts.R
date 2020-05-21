@@ -9,7 +9,7 @@ options(tigris_use_cache = TRUE)
 state_codes <- c(state.abb, "DC")
 names(state_codes) <- state_codes
 immigrant_groups <- read_rds("data/immigrant_grouped.rds")
-
+  
 # Cache the blocks to prevent download errors
 # purrr::walk(state_codes, ~blocks(state = .x, year = 2016))
 
@@ -69,14 +69,14 @@ state_dots_combined <- state_dots %>%
   st_as_sf(crs = 4326)
 
 tippecanoe(state_dots_combined, 
-           output = "data/state_dots2.mbtiles", 
-           layer_name = "state_dots2",
+           output = "data/state_dots3.mbtiles", 
+           layer_name = "state_dots3",
            max_zoom = 12,
            min_zoom = 3,
            drop_rate = 2)
 
-upload_tiles("data/state_dots2.mbtiles", 
+upload_tiles("data/state_dots3.mbtiles", 
              username = "kwalkertcu",
-             tileset_name = "state_dots2")
+             tileset_name = "state_dots3")
 
 

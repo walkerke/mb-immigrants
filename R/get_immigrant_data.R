@@ -23,7 +23,7 @@ immigrant_data <- map_dfr(state_codes, ~{
             west_africa = "B05006_109",
             oceania = "B05006_117",
             mexico = "B05006_139",
-            caribbean = "B05006_124",
+            caribbean = "B05006_125",
             central_amer = "B05006_138",
             south_amer = "B05006_148",
             canada = "B05006_161"
