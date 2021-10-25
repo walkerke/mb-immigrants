@@ -4,8 +4,8 @@
     <meta charset='utf-8' />
     <title>Mapping Immigrant America</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js'></script>
-    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css' rel='stylesheet' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.6.0-beta.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.6.0-beta.1/mapbox-gl.css' rel='stylesheet' />
     <link href='https://mapbox.com/base/latest/base.css' rel='stylesheet' />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/simplex/bootstrap.min.css">
 
@@ -106,12 +106,13 @@
 <script>
 mapboxgl.accessToken = 'pk.eyJ1Ijoia3dhbGtlcnRjdSIsImEiOiJMRk9JSmRvIn0.l1y2jHZ6IARHM_rA1-X45A';
 var map = new mapboxgl.Map({
+    projection: {name: 'albers', center: [-96, 37.5], parallels: [29.5, 45.5]},
     container: 'map',
     style: 'mapbox://styles/kwalkertcu/ckagwtnwl0sk21ilsf13673y9', // <-- this is where you put your style ID
     zoom: 11,
     center: [-87.630734, 41.864310], 
     maxZoom: 12, 
-    minZoom: 5, 
+    minZoom: 3.05, 
     hash: true
 });
 
@@ -140,7 +141,11 @@ function translate_dots() {
     return "1 dot = approximately 1600 people"  
   } else if (zm < 6 && zm >= 5) {
     return "1 dot = approximately 3200 people"
-  }
+  } else if (zm < 5 && zm >= 4) {
+    return "1 dot = approximately 6400 people"
+  } else if (zm < 4 && zm >= 3) {
+    return "1 dot = approximately 12800 people"
+  } 
 }
 
 map.on('load', function () {
